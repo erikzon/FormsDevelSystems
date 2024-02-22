@@ -6,7 +6,7 @@
 <h1>Weather</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
-
+<button onclick="@refrescarData"> refrescar</button>
 @if (forecasts == null)
 {
     <p><em>Loading...</em></p>
@@ -41,7 +41,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("http://localhost:5029/WeatherForecast");
+    }
+
+    async Task refrescarData()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("http://localhost:5029/WeatherForecast");
     }
 
     public class WeatherForecast
