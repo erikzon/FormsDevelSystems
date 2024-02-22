@@ -1,8 +1,40 @@
 ﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@using System.Text.Json.Serialization;
 
-<PageTitle>Home</PageTitle>
+<RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
+    <RadzenTemplateForm Data=@("LoginWithDefaultValues")>
+        <RadzenLogin AllowRegister="false" AllowResetPassword="false" Username=@modelo.Username Password=@modelo.Password Login=@(args => Login(args)) />
+    </RadzenTemplateForm>
+</RadzenCard>
 
-<h1>Hello, world!</h1>
+@code {
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 
-Welcome to your new app.
-<RadzenButton Text="Hi"></RadzenButton>
+    LoginModel modelo = new LoginModel();
+
+    private async Task Login(Radzen.LoginArgs args)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:5029/api/Auth/login?username={args.Username}&password={args.Password}");
+        var response = await Http.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var token = await response.Content.ReadFromJsonAsync<TokenResponse>();
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "access_token", token.AccessToken);
+            Navigation.NavigateTo("/weather");
+        }
+    }
+
+    public class TokenResponse
+    {
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; set; }
+    }
+}

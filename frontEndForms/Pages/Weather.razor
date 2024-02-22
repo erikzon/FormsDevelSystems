@@ -1,5 +1,7 @@
 ﻿@page "/weather"
 @inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 
 <PageTitle>Weather</PageTitle>
 
@@ -41,7 +43,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("http://localhost:5029/WeatherForecast");
+        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "access_token");
+        if (string.IsNullOrEmpty(token))
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        try
+        {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("http://localhost:5029/WeatherForecast");
+
+        }
+        catch (Exception)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
     }
 
     async Task refrescarData()
