@@ -7,7 +7,6 @@
 
 <PageTitle>Encuestas</PageTitle>
 <CerrarSesion />
-
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@listaEncuentas" TItem="Encuesta" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single">
     <HeaderTemplate>
@@ -77,7 +76,7 @@
                null,
                new DialogOptions() { Width = "800px", Height = "512px", Resizable = true, Draggable = true });
 
-        // await refrescarData();
+        await refrescarData();
     }
 
     async Task VisualizarResultados(Encuesta args)
@@ -86,20 +85,16 @@
                null,
                new DialogOptions() { Width = "800px", Height = "512px", Resizable = true, Draggable = true });
 
-        // await refrescarData();
+        await refrescarData();
     }
 
     async Task Eliminar(Encuesta args)
     {
         await Http.DeleteAsync($"http://localhost:5029/api/Encuestas/{args.IdEncuesta}");
 
-        // await refrescarData();
+        await refrescarData();
     }
 
-    void selectedEmployees()
-    {
-
-    }
 
     async Task refrescarData()
     {
