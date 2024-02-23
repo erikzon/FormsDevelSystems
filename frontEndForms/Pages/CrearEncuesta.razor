@@ -83,13 +83,34 @@
 
     async Task Guardar()
     {
-        modeloEncuesta.Campos = listaCampos;
-        var aver = JsonSerializer.Serialize(modeloEncuesta);
+        // modeloEncuesta.Campos = listaCampos;
+
         var response = await Http.PostAsJsonAsync("http://localhost:5029/api/Encuestas", modeloEncuesta);
 
         if (response.IsSuccessStatusCode)
         {
-            dialogService.Close(true);
+            var content = await response.Content.ReadAsStringAsync();
+            var jsonResponse = JsonDocument.Parse(content);
+            var idEncuesta = Guid.Parse(jsonResponse.RootElement.GetProperty("idEncuesta").GetString());
+            try
+            {
+                foreach (var item in listaCampos)
+                {
+                    item.IdEncuesta = idEncuesta;
+                    response = await Http.PostAsJsonAsync("http://localhost:5029/api/Campos", item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Se produjo un error: {ex.Message}");
+            }
+
+            finally
+            {
+
+                dialogService.Close(true);
+            }
+
         }
         else
         {

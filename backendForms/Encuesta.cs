@@ -15,7 +15,7 @@ namespace backendForms
         [StringLength(500)]
         public string Descripcion { get; set; }
 
-        public List<Campo> Campos { get; set; }
+        //public List<Campo> Campos { get; set; }
 
         public string Link
         {
