@@ -1,0 +1,74 @@
+﻿@using frontEndForms.Modelos
+@inject Radzen.DialogService dialogService
+
+<RadzenTemplateForm Submit="@((Encuesta args) => { Submit(args); })">
+    <RadzenRow Gap="1rem">
+        <RadzenColumn>
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Start">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+                    <RadzenLabel Text="Titulo:" />
+                    <RadzenTextBox @bind-Value="modeloEncuesta.Nombre" />
+                    <RadzenLabel Text="Descripcion:" />
+                    <RadzenTextArea @bind-Value=modeloEncuesta.Descripcion class="w-auto" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenRow Gap="1rem" class="mb-2">
+        <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2">Campos</RadzenText>
+        <RadzenButton Size="ButtonSize.Small" Click="@AgregarCampo" Text="+" ButtonStyle="ButtonStyle.Primary" />
+    </RadzenRow>
+
+    @foreach (var campo in listaCampos)
+    {
+        <RadzenRow Gap="1rem" class="my-2">
+            <RadzenColumn Size="12" SizeSM="6">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenFormField Text="Nombre" Variant=Variant.Flat>
+                        <RadzenTextBox @bind-Value="campo.Titulo" />
+                    </RadzenFormField>
+                    <RadzenFormField Text="Tipo" Variant="Variant.Flat">
+                        <RadzenDropDown Data=@listaTipos @bind-Value="campo.TipoCampo" />
+                    </RadzenFormField>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenLabel Text="Requerido?" />
+                        <RadzenSwitch @bind-Value=campo.Requerido />
+                    </RadzenStack>
+                    <RadzenButton Size="ButtonSize.Small" Click="() => QuitarCampo(campo)" Text="-" ButtonStyle="ButtonStyle.Secondary" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    }
+
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Guardar" />
+        <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancelar" Click="@Cancel" />
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    Encuesta modeloEncuesta = new Encuesta();
+    List<String> listaTipos = new List<String> { "texto", "numero", "fecha" };
+    List<Campo> listaCampos = new List<Campo> { new Campo() };
+
+    void AgregarCampo()
+    {
+        listaCampos.Add(new Campo());
+    }
+
+    void QuitarCampo(Campo campo)
+    {
+        listaCampos.Remove(campo);
+    }
+
+    void Submit(Encuesta arg)
+    {
+        dialogService.Close(true);
+    }
+
+    void Cancel()
+    {
+        dialogService.Close(true);
+    }
+}

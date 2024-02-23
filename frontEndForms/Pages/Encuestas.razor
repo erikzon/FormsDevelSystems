@@ -3,7 +3,7 @@
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
-
+@inject DialogService DialogService
 
 <PageTitle>Encuestas</PageTitle>
 <CerrarSesion />
@@ -13,13 +13,15 @@
     <HeaderTemplate>
         <RadzenButton Text="Crear nueva encuestra" Click=@CrearNuevaEncuesta />
     </HeaderTemplate>
+    <EmptyTemplate>
+        <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No hay encuestas por mostrar.</p>
+    </EmptyTemplate>
     <Columns>
-        <RadzenDataGridColumn TItem="Encuesta" Property="EmployeeID" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="Encuesta" Property="FirstName" Title="First Name" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="Nombre" Filterable="false" Title="Titulo" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="Descripcion" Title="Descripcion" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="Link" Title="Link" Frozen="true" Width="160px" />
     </Columns>
 </RadzenDataGrid>
-
-<h1>Encuestas</h1>
 
 
 @code {
@@ -46,9 +48,11 @@
         // }
     }
 
-    void CrearNuevaEncuesta()
+    async Task CrearNuevaEncuesta()
     {
-
+        await DialogService.OpenAsync<CrearEncuesta>($"Crear encuesta",
+               null,
+               new DialogOptions() { Width = "800px", Height = "512px", Resizable = true, Draggable = true });
     }
 
     void selectedEmployees()

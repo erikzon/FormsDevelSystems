@@ -16,5 +16,13 @@ namespace frontEndForms.Modelos
         public string Descripcion { get; set; }
 
         public List<Campo> Campos { get; set; }
+
+        public string Link
+        {
+            get
+            {
+                return $"http://localhost:5029/Encuestas/{IdEncuesta}";
+            }
+        }
     }
 }

@@ -2,10 +2,10 @@
 @inject NavigationManager Navigation
 
 
-<div class="top-row px-4">
+<div class="top-row px-4 m-2">
     @if (@existeSesion)
     {
-        <button onclick="@CerrarSesionMetodo">Cerrar sesion</button>
+        <RadzenButton Click="@CerrarSesionMetodo" Text="Cerrar Sesion" ButtonStyle="ButtonStyle.Danger" />
     }
 </div>
 
