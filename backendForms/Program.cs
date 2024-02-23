@@ -1,11 +1,14 @@
+using backendForms.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var connectionStringApplicationDB = builder.Configuration.GetConnectionString("ApplicationDB") ?? throw new InvalidOperationException("Connection string 'ApplicationDB' not found.");
 // Add services to the container.
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionStringApplicationDB));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

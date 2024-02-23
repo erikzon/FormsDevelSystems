@@ -1,7 +1,10 @@
-﻿@using frontEndForms.Modelos
+﻿@using System.Text.Json
+@inject HttpClient Http
+@using frontEndForms.Modelos
 @inject Radzen.DialogService dialogService
+@inject IJSRuntime JSRuntime
 
-<RadzenTemplateForm Submit="@((Encuesta args) => { Submit(args); })">
+<RadzenTemplateForm Submit="@(async (Encuesta args) => { await  Submit(args); })">
     <RadzenRow Gap="1rem">
         <RadzenColumn>
             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Start">
@@ -41,11 +44,11 @@
         </RadzenRow>
     }
 
-    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
-        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Guardar" />
-        <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancelar" Click="@Cancel" />
-    </RadzenStack>
 </RadzenTemplateForm>
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+    <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Medium" Icon="save" Text="Guardar" Click="@Guardar" />
+    <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Icon="cancel" Text="Cancelar" Click="@Cancel" />
+</RadzenStack>
 
 @code {
     Encuesta modeloEncuesta = new Encuesta();
@@ -62,9 +65,36 @@
         listaCampos.Remove(campo);
     }
 
-    void Submit(Encuesta arg)
+    async Task Submit(Encuesta arg)
     {
-        dialogService.Close(true);
+        arg.Campos = listaCampos;
+
+        var response = await Http.PostAsJsonAsync("http://localhost:5029/api/Encuestas", arg);
+
+        if (response.IsSuccessStatusCode)
+        {
+            dialogService.Close(arg);
+        }
+        else
+        {
+            Console.WriteLine("Error al guardar la encuesta");
+        }
+    }
+
+    async Task Guardar()
+    {
+        modeloEncuesta.Campos = listaCampos;
+        var aver = JsonSerializer.Serialize(modeloEncuesta);
+        var response = await Http.PostAsJsonAsync("http://localhost:5029/api/Encuestas", modeloEncuesta);
+
+        if (response.IsSuccessStatusCode)
+        {
+            dialogService.Close(true);
+        }
+        else
+        {
+            Console.WriteLine("Error al guardar la encuesta");
+        }
     }
 
     void Cancel()

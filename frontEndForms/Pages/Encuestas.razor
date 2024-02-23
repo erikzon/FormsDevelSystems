@@ -36,16 +36,16 @@
         }
 
         Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        // try
-        // {
-        //     listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/Encuestas");
+        try
+        {
+            listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/api/Encuestas");
 
-        // }
-        // catch (Exception)
-        // {
-        //     Navigation.NavigateTo("/");
-        //     return;
-        // }
+        }
+        catch (Exception)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
     }
 
     async Task CrearNuevaEncuesta()

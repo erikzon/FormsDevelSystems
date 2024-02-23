@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace frontEndForms.Modelos
+namespace backendForms
 {
     public class Campo
     {
@@ -22,9 +22,6 @@ namespace frontEndForms.Modelos
 
         public Guid IdEncuesta { get; set; }
 
-        [ForeignKey("IdEncuesta")]
-        public Encuesta Encuesta { get; set; }
-
-        public List<Respuesta> Respuestas { get; set; }
+        public List<Respuesta>? Respuestas { get; set; }
     }
 }
