@@ -2,7 +2,8 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
-@using System.Text.Json.Serialization;
+@inject DialogService DialogService
+@using System.Text.Json.Serialization
 
 <RadzenCard>
     <RadzenText TextStyle="TextStyle.Caption">por simplificacion el usuario para autenticacion por JWT es:</RadzenText>
@@ -37,6 +38,14 @@
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", "access_token", token.AccessToken);
             Navigation.NavigateTo("/Encuestas");
         }
+        else
+        {
+            await DialogService.OpenAsync("Alerta", ds =>
+                @<div>
+                    Credenciales incorrectas.
+                </div>, new DialogOptions() { CloseDialogOnOverlayClick = true });
+        }
+
     }
 
     public class TokenResponse

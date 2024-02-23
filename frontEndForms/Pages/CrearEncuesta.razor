@@ -10,9 +10,11 @@
             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Start">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
                     <RadzenLabel Text="Titulo:" />
-                    <RadzenTextBox @bind-Value="modeloEncuesta.Nombre" />
+                    <RadzenTextBox @bind-Value="modeloEncuesta.Nombre" Name="Nombre" />
+                    <RadzenRequiredValidator Component="Nombre" Text="el titulo obligatorio" Popup=true Style="position: absolute" />
                     <RadzenLabel Text="Descripcion:" />
-                    <RadzenTextArea @bind-Value=modeloEncuesta.Descripcion class="w-auto" />
+                    <RadzenTextArea @bind-Value=modeloEncuesta.Descripcion class="w-auto" Name="Descripcion"/>
+                    <RadzenRequiredValidator Component="Descripcion" Text="la descripcion es obligatoria" Popup=true Style="position: absolute" />
                 </RadzenStack>
             </RadzenStack>
         </RadzenColumn>
@@ -29,7 +31,7 @@
             <RadzenColumn Size="12" SizeSM="6">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenFormField Text="Nombre" Variant=Variant.Flat>
-                        <RadzenTextBox @bind-Value="campo.Titulo" />
+                        <RadzenTextBox @bind-Value="campo.Titulo" required />
                     </RadzenFormField>
                     <RadzenFormField Text="Tipo" Variant="Variant.Flat">
                         <RadzenDropDown Data=@listaTipos @bind-Value="campo.TipoCampo" />
