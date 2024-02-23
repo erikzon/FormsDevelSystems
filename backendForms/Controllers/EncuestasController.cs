@@ -98,8 +98,16 @@ namespace backendForms.Controllers
             {
                 return NotFound();
             }
-
             _context.Encuestas.Remove(encuesta);
+
+            var campos = await _context.Campos.Where(c => c.IdEncuesta == id).ToListAsync();
+            foreach (var item in campos)
+            {
+                var respuestas = await _context.Respuestas.Where(r => r.IdCampo == item.IdCampo).ToListAsync();
+                _context.Respuestas.RemoveRange(respuestas);
+            }
+            _context.Campos.RemoveRange(campos);
+
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backendForms.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backendForms.Controllers
 {
@@ -22,6 +23,7 @@ namespace backendForms.Controllers
 
         // GET: api/Respuestas
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Respuesta>>> GetRespuestas()
         {
             return await _context.Respuestas.ToListAsync();
@@ -29,6 +31,7 @@ namespace backendForms.Controllers
 
         // GET: api/Respuestas/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Respuesta>> GetRespuesta(int id)
         {
             var respuesta = await _context.Respuestas.FindAsync(id);
@@ -44,6 +47,7 @@ namespace backendForms.Controllers
         // PUT: api/Respuestas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutRespuesta(int id, Respuesta respuesta)
         {
             if (id != respuesta.IdRespuesta)

@@ -17,11 +17,31 @@
         <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No hay encuestas por mostrar.</p>
     </EmptyTemplate>
     <Columns>
-        <RadzenDataGridColumn TItem="Encuesta" Property="Nombre" Filterable="false" Title="Titulo" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn TItem="Encuesta" Property="Descripcion" Title="Descripcion" Frozen="true" Width="80px" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="Nombre" Filterable="false" Title="Titulo" Frozen="true" Width="60px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="Descripcion" Title="Descripcion" Frozen="true" Width="70px" />
         <RadzenDataGridColumn TItem="Encuesta" Property="Link" Title="Link" Frozen="true" Width="300px">
             <Template Context="data">
                 <a href="@data.Link" target="_blank">@data.Link</a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Encuesta" Property="Link" Title="Visualizar" Frozen="true" Width="40px" Filterable=false>
+            <Template Context="data">
+                <RadzenButton Click="@(async () => await VisualizarResultados(data))" Size="ButtonSize.Small" Text="🔎" ButtonStyle="ButtonStyle.Success" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Encuesta" Property="Link" Title="Eliminar" Frozen="true" Width="40px" Filterable=false>
+            <Template Context="data">
+                <RadzenButton Text="❌" ButtonStyle="ButtonStyle.Warning"
+                              Click=@(async args => {
+                              var result = await DialogService.Confirm(
+                              "Esta seguro?",
+                              "Eliminar cuestionario",
+                              new ConfirmOptions() { OkButtonText = "Si", CancelButtonText = "No" }
+                              );
+                              if (result == true)
+                              {
+                              await Eliminar(data);
+                              }}) />
             </Template>
         </RadzenDataGridColumn>
     </Columns>
@@ -43,7 +63,6 @@
         try
         {
             listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/api/Encuestas");
-
         }
         catch (Exception)
         {
@@ -61,6 +80,22 @@
         // await refrescarData();
     }
 
+    async Task VisualizarResultados(Encuesta args)
+    {
+        await DialogService.OpenAsync<CrearEncuesta>($"Crear encuesta",
+               null,
+               new DialogOptions() { Width = "800px", Height = "512px", Resizable = true, Draggable = true });
+
+        // await refrescarData();
+    }
+
+    async Task Eliminar(Encuesta args)
+    {
+        await Http.DeleteAsync($"http://localhost:5029/api/Encuestas/{args.IdEncuesta}");
+
+        // await refrescarData();
+    }
+
     void selectedEmployees()
     {
 
@@ -68,6 +103,6 @@
 
     async Task refrescarData()
     {
-        listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/Encuestas");
+        listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/api/Encuestas");
     }
 }
