@@ -8,7 +8,7 @@
 <PageTitle>Encuestas</PageTitle>
 <CerrarSesion />
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@listaEncuentas" TItem="Encuesta" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single">
     <HeaderTemplate>
         <RadzenButton Text="Crear nueva encuestra" Click=@CrearNuevaEncuesta />
@@ -19,7 +19,11 @@
     <Columns>
         <RadzenDataGridColumn TItem="Encuesta" Property="Nombre" Filterable="false" Title="Titulo" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
         <RadzenDataGridColumn TItem="Encuesta" Property="Descripcion" Title="Descripcion" Frozen="true" Width="80px" />
-        <RadzenDataGridColumn TItem="Encuesta" Property="Link" Title="Link" Frozen="true" Width="300px" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="Link" Title="Link" Frozen="true" Width="300px">
+            <Template Context="data">
+                <a href="@data.Link" target="_blank">@data.Link</a>
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 

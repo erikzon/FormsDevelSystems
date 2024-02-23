@@ -9,7 +9,6 @@ namespace backendForms
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdRespuesta { get; set; }
 
-        [Required]
         [StringLength(256)]
         public string Valor { get; set; }
 

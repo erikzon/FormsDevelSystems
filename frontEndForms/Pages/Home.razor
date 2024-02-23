@@ -4,6 +4,13 @@
 @inject IJSRuntime JSRuntime
 @using System.Text.Json.Serialization;
 
+<RadzenCard>
+    <RadzenText TextStyle="TextStyle.Caption">por simplificacion el usuario para autenticacion por JWT es:</RadzenText>
+    <br />
+    <RadzenText TextStyle="TextStyle.Caption">usuario: user </RadzenText>
+    <br />
+    <RadzenText TextStyle="TextStyle.Caption">contraseña: password</RadzenText>
+</RadzenCard>
 <RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
     <RadzenTemplateForm Data=@("LoginWithDefaultValues")>
         <RadzenLogin AllowRegister="false" AllowResetPassword="false" Username=@modelo.Username Password=@modelo.Password Login=@(args => Login(args)) />

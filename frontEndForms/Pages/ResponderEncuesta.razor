@@ -1,0 +1,83 @@
+﻿@page "/encuesta/{Id}"
+@using frontEndForms.Modelos
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject DialogService DialogService
+@using System.Text.Json;
+
+<PageTitle>Encuestas</PageTitle>
+@if (encuesta is not null)
+{
+    <h2>@encuesta.Nombre</h2>
+    <p>@encuesta.Descripcion</p>
+}
+@if (campos is not null)
+{
+    <RadzenTemplateForm Submit="@(async (Respuesta args) => { await  Guardar(args); })">
+        @foreach (var campo in campos)
+        {
+            if (campo.TipoCampo == "texto")
+            {
+                <RadzenTextBox @bind-Value="respuestas[campo.IdCampo].Valor" Name="@campo.IdCampo.ToString()" Style="width:100%; margin-bottom:10px" Placeholder="@campo.Titulo" />
+            }
+            else if (campo.TipoCampo == "numero")
+            {
+                <RadzenNumeric @bind-Value="respuestas[campo.IdCampo].Valor" Name="@campo.IdCampo.ToString()" Style="width:100%; margin-bottom:10px" Placeholder="@campo.Titulo" />
+            }
+            else if (campo.TipoCampo == "fecha")
+            {
+                <RadzenDatePicker TValue="DateTime" @bind-Value="respuestas[campo.IdCampo].ValorFecha" DateFormat="dd/MM/yyyy" Name="@campo.IdCampo.ToString()" Style="width:100%; margin-bottom:10px" Placeholder="@campo.Titulo" />
+            }
+        }
+    </RadzenTemplateForm>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Medium" Icon="save" Text="Enviar respuestas" Click="@Guardar" />
+    </RadzenStack>
+} else
+{
+    <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public Dictionary<int, Respuesta> respuestas = new Dictionary<int, Respuesta>();
+
+    public Encuesta encuesta;
+    public Campo[]? campos;
+    protected override async Task OnInitializedAsync()
+    {
+        encuesta = await Http.GetFromJsonAsync<Encuesta>($"http://localhost:5029/api/Encuestas/{Id}");
+        campos = await Http.GetFromJsonAsync<Campo[]>($"http://localhost:5029/api/Campos/{Id}");
+
+        foreach (var campo in campos)
+        {
+            Respuesta enlazarRespuesta = new Respuesta();
+            enlazarRespuesta.IdCampo = campo.IdCampo;
+            enlazarRespuesta.Campo = campo;
+            respuestas[campo.IdCampo] = enlazarRespuesta;
+        }
+    }
+
+    async Task Guardar()
+    {
+        foreach (var item in respuestas)
+        {
+            Respuesta respuesta = item.Value;
+            var jsonrepuesta = JsonSerializer.Serialize(respuesta);
+            var response = await Http.PostAsJsonAsync("http://localhost:5029/api/Respuestas", respuesta);
+        }
+    }
+
+    async Task Guardar(Respuesta args)
+    {
+        foreach (var item in respuestas)
+        {
+            var respuesta = item.Value;
+            var response = await Http.PostAsJsonAsync("http://localhost:5029/api/Respuestas", respuesta);
+        }
+    }
+
+}

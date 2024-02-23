@@ -30,9 +30,9 @@ namespace backendForms.Controllers
 
         // GET: api/Campos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Campo>> GetCampo(int id)
+        public async Task<ActionResult<List<Campo>>> GetCampo(Guid id)
         {
-            var campo = await _context.Campos.FindAsync(id);
+            var campo = await _context.Campos.Where(x => x.IdEncuesta == id).ToListAsync();
 
             if (campo == null)
             {

@@ -21,7 +21,7 @@ namespace frontEndForms.Modelos
         {
             get
             {
-                return $"http://localhost:5029/Encuestas/{IdEncuesta}";
+                return $"https://localhost:7029/encuesta/{IdEncuesta}";
             }
         }
     }

@@ -80,21 +80,8 @@ namespace backendForms.Controllers
         [Authorize]
         public async Task<ActionResult<Encuesta>> PostEncuesta(Encuesta encuesta)
         {
-            //if (encuesta.Campos == null || !encuesta.Campos.Any())
-            //{
-            //    return BadRequest("La encuesta debe tener al menos un campo.");
-            //}
-
-            //// Establece la relación entre la encuesta y sus campos
-            //foreach (var campo in encuesta.Campos)
-            //{
-            //    campo.IdEncuesta = encuesta.IdEncuesta;
-            //}
-
-            // Agrega la encuesta al contexto
             _context.Encuestas.Add(encuesta);
 
-            // Guarda los cambios en la base de datos
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEncuesta", new { id = encuesta.IdEncuesta }, encuesta);
