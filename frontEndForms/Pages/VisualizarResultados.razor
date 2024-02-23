@@ -1,0 +1,59 @@
+﻿@using frontEndForms.Modelos
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject DialogService DialogService
+@inject DialogService DialogService
+@using System.Text.Json
+
+@if (encuesta is not null)
+{
+    <h2>@encuesta.Nombre</h2>
+    <p>@encuesta.Descripcion</p>
+}
+else
+{
+    <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
+
+@if (campos is not null)
+{
+    foreach (var campo in campos)
+    {
+        <RadzenText TextStyle="TextStyle.Subtitle2">@campo.Titulo</RadzenText>
+        @if (respuestas is not null)
+        {
+            foreach (var respuesta in respuestas.Where(r => r.IdCampo == campo.IdCampo))
+            {
+                <RadzenText TextStyle="TextStyle.Body1">@respuesta.Valor</RadzenText>
+            }
+        }
+        else if (respuestas is not null && respuestas.Count == 0)
+        {
+            <RadzenText TextStyle="TextStyle.Body2">-no hay repuestas-</RadzenText>
+        }
+    }
+}
+
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    public Encuesta encuesta;
+    public Campo[]? campos;
+    List<Respuesta> respuestas = new List<Respuesta>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        encuesta = await Http.GetFromJsonAsync<Encuesta>($"http://localhost:5029/api/Encuestas/{Id.ToString()}");
+        campos = await Http.GetFromJsonAsync<Campo[]>($"http://localhost:5029/api/Campos/{Id.ToString()}");
+        foreach (var campo in campos)
+        {
+            var respuestasCampo = await Http.GetFromJsonAsync<Respuesta[]>($"http://localhost:5029/api/Respuestas/{campo.IdCampo}");
+            respuestas.AddRange(respuestasCampo);
+        }
+    }
+}
+

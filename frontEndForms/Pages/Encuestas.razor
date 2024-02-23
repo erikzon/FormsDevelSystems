@@ -81,8 +81,8 @@
 
     async Task VisualizarResultados(Encuesta args)
     {
-        await DialogService.OpenAsync<CrearEncuesta>($"Crear encuesta",
-               null,
+        await DialogService.OpenAsync<VisualizarResultados>($"Resultados",
+               new Dictionary<string, Object>() { { "Id", args.IdEncuesta } },
                new DialogOptions() { Width = "800px", Height = "512px", Resizable = true, Draggable = true });
 
         await refrescarData();

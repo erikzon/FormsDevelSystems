@@ -32,9 +32,9 @@ namespace backendForms.Controllers
         // GET: api/Respuestas/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Respuesta>> GetRespuesta(int id)
+        public async Task<ActionResult<List<Respuesta>>> GetRespuesta(int id)
         {
-            var respuesta = await _context.Respuestas.FindAsync(id);
+            var respuesta = await _context.Respuestas.Where(r => r.IdCampo == id).ToListAsync();
 
             if (respuesta == null)
             {
