@@ -1,0 +1,43 @@
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+
+<div class="top-row px-4">
+    @if (@existeSesion)
+    {
+        <button onclick="@CerrarSesionMetodo">Cerrar sesion</button>
+    }
+</div>
+
+
+@code {
+    private bool existeSesion = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.LocationChanged += HandleLocationChanged;
+        await VerificarToken();
+    }
+
+    private async Task VerificarToken()
+    {
+        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "access_token");
+        existeSesion = !string.IsNullOrEmpty(token);
+    }
+
+    private async void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        await VerificarToken();
+    }
+
+    async Task CerrarSesionMetodo()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "access_token");
+        Navigation.NavigateTo("/");
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= HandleLocationChanged;
+    }
+}

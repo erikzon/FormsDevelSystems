@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "ambos proyectos",
+    "Projects": [
+      {
+        "Name": "backendForms\\backendForms.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Name": "frontEndForms\\frontEndForms.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      }
+    ]
+  }
+]

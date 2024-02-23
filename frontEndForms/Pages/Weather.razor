@@ -4,6 +4,7 @@
 @inject NavigationManager Navigation
 
 <PageTitle>Weather</PageTitle>
+<CerrarSesion />
 
 <h1>Weather</h1>
 
@@ -46,7 +47,7 @@ else
         var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "access_token");
         if (string.IsNullOrEmpty(token))
         {
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/");
             return;
         }
 
@@ -58,7 +59,7 @@ else
         }
         catch (Exception)
         {
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/");
             return;
         }
     }

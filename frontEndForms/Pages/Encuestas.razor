@@ -1,0 +1,63 @@
+﻿@page "/encuestas"
+@using frontEndForms.Modelos
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+
+<PageTitle>Encuestas</PageTitle>
+<CerrarSesion />
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@listaEncuentas" TItem="Encuesta" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single">
+    <HeaderTemplate>
+        <RadzenButton Text="Crear nueva encuestra" Click=@CrearNuevaEncuesta />
+    </HeaderTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="Encuesta" Property="EmployeeID" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="Encuesta" Property="FirstName" Title="First Name" Frozen="true" Width="160px" />
+    </Columns>
+</RadzenDataGrid>
+
+<h1>Encuestas</h1>
+
+
+@code {
+    public Encuesta[]? listaEncuentas;
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "access_token");
+        if (string.IsNullOrEmpty(token))
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        // try
+        // {
+        //     listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/Encuestas");
+
+        // }
+        // catch (Exception)
+        // {
+        //     Navigation.NavigateTo("/");
+        //     return;
+        // }
+    }
+
+    void CrearNuevaEncuesta()
+    {
+
+    }
+
+    void selectedEmployees()
+    {
+
+    }
+
+    async Task refrescarData()
+    {
+        listaEncuentas = await Http.GetFromJsonAsync<Encuesta[]>("http://localhost:5029/Encuestas");
+    }
+}

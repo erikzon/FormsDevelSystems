@@ -28,7 +28,7 @@
         {
             var token = await response.Content.ReadFromJsonAsync<TokenResponse>();
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", "access_token", token.AccessToken);
-            Navigation.NavigateTo("/weather");
+            Navigation.NavigateTo("/Encuestas");
         }
     }
 
